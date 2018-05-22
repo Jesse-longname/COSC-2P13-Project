@@ -21,11 +21,11 @@ public class Main {
 
         // Set up all but the last thread, because the last thread will have the remaining elements.
         for (int i = 0; i < numThreads-1; i++) {
-            calcs[i] = new PiCalculator(i*perThread, ((i+1)*perThread));
+            calcs[i] = new PiCalculator(i, i*perThread, ((i+1)*perThread));
             threads[i] = new Thread(calcs[i]);
         }
         // Set up final thread with remaining elements
-        calcs[numThreads - 1] = new PiCalculator((numThreads-1)*perThread, numElements);
+        calcs[numThreads - 1] = new PiCalculator(numThreads-1, (numThreads-1)*perThread, numElements);
         threads[numThreads - 1] = new Thread(calcs[numThreads - 1]);
 
         // Start all of the Threads

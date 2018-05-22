@@ -7,9 +7,11 @@ public class PiCalculator implements Runnable {
     double calculated = 0;
     long current;
     long max; // Calculate to this term
+    final int id;
 
     // Set the range of terms to calculate pi for. (inclusive, exclusive).
-    public PiCalculator(long from, long to) {
+    public PiCalculator(int id, long from, long to) {
+        this.id = id;
         current = from;
         max = to;
     }
