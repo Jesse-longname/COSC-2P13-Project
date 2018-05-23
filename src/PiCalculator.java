@@ -8,9 +8,11 @@ public class PiCalculator implements Runnable {
     long current;
     long max; // Calculate to this term
     final int id;
+    Controller controller;
 
     // Set the range of terms to calculate pi for. (inclusive, exclusive).
-    public PiCalculator(int id, long from, long to) {
+    public PiCalculator(Controller controller, int id, long from, long to) {
+        this.controller = controller;
         this.id = id;
         current = from;
         max = to;
@@ -22,6 +24,10 @@ public class PiCalculator implements Runnable {
      */
     @Override
     public void run() {
+        // Try to acquire the locks
+        controller.doAction();
+        controller.acquireLocks(this.id);
+        // Wait until they're acquired
         int numerator = current % 2 == 0 ? 1 : -1;
         double denominator;
         while (current < max) {
@@ -30,5 +36,8 @@ public class PiCalculator implements Runnable {
             numerator *= -1; // Save computation by just multiplying by -1 each iteration?
             current += 1;
         }
+        // Release the lock
+        controller.releaseLocks(id);
+        controller.doAction();
     }
 }

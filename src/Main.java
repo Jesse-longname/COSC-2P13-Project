@@ -10,14 +10,18 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Scanner s = new Scanner(System.in);
-        System.out.println("How many elements to calculate?");
-        long numElements = s.nextLong();
-        System.out.println("How many threads to use?");
-        int numThreads = s.nextInt();
+        for (int i = 0; i < 100; i++) {
+            Scanner s = new Scanner(System.in);
+            System.out.println("How many elements to calculate?");
+//        long numElements = s.nextLong();
+            long numElements = 100000;
+            System.out.println("How many threads to use?");
+//        int numThreads = s.nextInt();
+            int numThreads = 10;
 
-        Controller controller = new Controller(numThreads, numElements);
-        double result = controller.doCalculation();
-        System.out.println("The calculated value for Pi is: " + result);
+            Controller controller = new Controller(numThreads, numElements);
+            double result = controller.doCalculation();
+            System.out.println("The calculated value for Pi is: " + result);
+        }
     }
 }
