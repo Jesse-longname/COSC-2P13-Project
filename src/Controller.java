@@ -6,8 +6,8 @@ public class Controller {
     int numThreads;
     PiCalculator[] calculators;
     Thread[] threads;
-    Semaphore[] semaphores;
     ArrayList<Integer> acquired;
+    Object[] controlVariables;
 
     public Controller(int numThreads, long numElements) {
         this.numElements = numElements;
@@ -15,10 +15,9 @@ public class Controller {
         // Set up threads
         calculators = new PiCalculator[numThreads];
         threads = new Thread[numThreads];
-        // Set up semaphores
-        semaphores = new Semaphore[numThreads];
+        controlVariables = new Object[numThreads];
         for (int i = 0; i < numThreads; i++) {
-            semaphores[i] = new Semaphore(1);
+            controlVariables[i] = new Object();
         }
 
         // Debugging
@@ -59,34 +58,6 @@ public class Controller {
         return total*4;
     }
 
-    public void acquireLocks(int id) {
-        int beforeId = id == 0 ? numThreads - 1 : id - 1;
-        doAction();
-        try {
-            System.out.println("Try Acquire before id: " + beforeId);
-            semaphores[beforeId].acquire();
-            System.out.println("Did Acquire before id: " + beforeId);
-            System.out.println("Try Acquire id: " + id);
-            semaphores[id].acquire();
-            System.out.println("Did Acquire id: " + id);
-        } catch(InterruptedException e) {
-            System.out.println("Interrupted Exception: ");
-            e.printStackTrace();
-        }
-    }
-
-    public void releaseLocks(int id) {
-        int beforeId = id == 0 ? numThreads - 1 : id - 1;
-        //release
-        System.out.println("Try Release before id: " + beforeId);
-        semaphores[beforeId].release();
-        System.out.println("Did Release before id: " + beforeId);
-        System.out.println("Try Release id: " + id);
-        semaphores[id].release();
-        System.out.println("Did Release id: " + id);
-        doAction();
-    }
-
     public void doAction() {
         calculate((int)(Math.random() * 4 + 36));
     }
@@ -94,12 +65,5 @@ public class Controller {
     private static long calculate(int n) {
         if (n <= 1) return n;
         else return calculate(n-1) + calculate(n-2);
-    }
-
-    private synchronized void printAcquired() {
-        for (int a: acquired) {
-            System.out.print(a + " ");
-        }
-        System.out.println();
     }
 }
