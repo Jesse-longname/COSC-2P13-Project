@@ -25,7 +25,6 @@ public class PiCalculator implements Runnable {
     @Override
     public void run() {
         // Try to acquire the locks
-        controller.doAction();
         controller.acquireLocks(this.id);
         // Wait until they're acquired
         int numerator = current % 2 == 0 ? 1 : -1;
@@ -38,6 +37,5 @@ public class PiCalculator implements Runnable {
         }
         // Release the lock
         controller.releaseLocks(id);
-        controller.doAction();
     }
 }

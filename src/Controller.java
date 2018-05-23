@@ -61,6 +61,7 @@ public class Controller {
 
     public void acquireLocks(int id) {
         int beforeId = id == 0 ? numThreads - 1 : id - 1;
+        doAction();
         try {
             System.out.println("Try Acquire before id: " + beforeId);
             semaphores[beforeId].acquire();
@@ -83,6 +84,7 @@ public class Controller {
         System.out.println("Try Release id: " + id);
         semaphores[id].release();
         System.out.println("Did Release id: " + id);
+        doAction();
     }
 
     public void doAction() {
