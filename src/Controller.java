@@ -61,11 +61,12 @@ public class Controller {
 
     public void acquireLocks(int id) {
         int beforeId = id == 0 ? numThreads - 1 : id - 1;
-        doAction();
         try {
+            doAction();
             System.out.println("Try Acquire before id: " + beforeId);
             semaphores[beforeId].acquire();
             System.out.println("Did Acquire before id: " + beforeId);
+            doAction();
             System.out.println("Try Acquire id: " + id);
             semaphores[id].acquire();
             System.out.println("Did Acquire id: " + id);
@@ -81,9 +82,11 @@ public class Controller {
         System.out.println("Try Release before id: " + beforeId);
         semaphores[beforeId].release();
         System.out.println("Did Release before id: " + beforeId);
+        doAction();
         System.out.println("Try Release id: " + id);
         semaphores[id].release();
         System.out.println("Did Release id: " + id);
+        doAction();
         doAction();
     }
 

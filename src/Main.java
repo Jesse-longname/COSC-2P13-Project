@@ -17,7 +17,7 @@ public class Main {
             long numElements = 100000;
             System.out.println("How many threads to use?");
 //        int numThreads = s.nextInt();
-            int numThreads = 10;
+            int numThreads = 4;
 
             Controller controller = new Controller(numThreads, numElements);
             double result = controller.doCalculation();
