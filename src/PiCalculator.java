@@ -32,19 +32,21 @@ public class PiCalculator implements Runnable {
      */
     @Override
     public void run() {
+        int firstSynchronize = id % 2 == 0 ? id : beforeId;
+        int secondSynchronize = id % 2 == 1 ? id : beforeId;
         // Try to acquire the locks
-        if (Main.DEBUG_MODE) System.out.println("Try acquire beforeId: " + beforeId);
+        if (Main.DEBUG_MODE) System.out.println("Try acquire id: " + firstSynchronize);
 
         doAction();
-        synchronized (controlVariables[beforeId]) {
+        synchronized (controlVariables[firstSynchronize]) {
             if (Main.DEBUG_MODE) {
-                System.out.println("Did acquire beforeId: " + beforeId);
-                System.out.println("Try acquire id: " + beforeId);
+                System.out.println("Did acquire id: " + firstSynchronize);
+                System.out.println("Try acquire id: " + secondSynchronize);
             }
 
             doAction();
-            synchronized (controlVariables[id]) {
-                if (Main.DEBUG_MODE) System.out.println("Did acquire beforeId: " + beforeId);
+            synchronized (controlVariables[secondSynchronize]) {
+                if (Main.DEBUG_MODE) System.out.println("Did acquire beforeId: " + secondSynchronize);
 
                 // Both locks are acquired, calculate terms in the designated range.
                 int numerator = current % 2 == 0 ? 1 : -1;
@@ -56,17 +58,17 @@ public class PiCalculator implements Runnable {
                     current += 1;
                 }
 
-                if (Main.DEBUG_MODE) System.out.println("Try release id: " + id);
+                if (Main.DEBUG_MODE) System.out.println("Try release id: " + secondSynchronize);
             }
 
             if (Main.DEBUG_MODE) {
-                System.out.println("Did release id: " + id);
-                System.out.println("Try release beforeId: " + beforeId);
+                System.out.println("Did release id: " + secondSynchronize);
+                System.out.println("Try release id: " + firstSynchronize);
             }
             // After first release, so doAction
             doAction();
         }
-        if (Main.DEBUG_MODE) System.out.println("Did release beforeId: " + beforeId);
+        if (Main.DEBUG_MODE) System.out.println("Did release id: " + firstSynchronize);
 
         // After second release, so doAction
         doAction();
