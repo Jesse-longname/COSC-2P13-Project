@@ -45,7 +45,7 @@ public class PiCalculator implements Runnable {
         Object firstLock = new Object(), secondLock = new Object();
         if(beforeId == id){
             try {
-                throw new Exception("Cannot lock the same thing twice");
+                throw new Exception("Please use more than one thread");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
