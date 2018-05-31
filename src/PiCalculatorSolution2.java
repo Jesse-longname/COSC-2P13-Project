@@ -3,7 +3,7 @@
  * Uses the equation given in the assignment, to calculate the _first_ to _last_ terms
  *  given in the constructor (inclusive, exclusive).
  */
-public class PiCalculator implements Runnable {
+public class PiCalculatorSolution2 implements Runnable {
     double calculated = 0;
     long current;
     long max; // Calculate to this term
@@ -18,7 +18,7 @@ public class PiCalculator implements Runnable {
      * @param from Term of formula to calculate from (Inclusive).
      * @param to Term of formula to calculate to (Exclusive).
      */
-    public PiCalculator(Object[] controlVariables, int id, long from, long to) {
+    public PiCalculatorSolution2(Object[] controlVariables, int id, long from, long to) {
         this.controlVariables = controlVariables;
         this.id = id;
         beforeId = id == 0 ? controlVariables.length - 1 : id - 1;
