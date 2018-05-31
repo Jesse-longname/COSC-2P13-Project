@@ -1,3 +1,8 @@
+package main;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Calculates a portion of Pi along with other instances of this class.
  * Uses the equation given in the assignment, to calculate the _first_ to _last_ terms
@@ -36,14 +41,31 @@ public class PiCalculator implements Runnable {
         if (Main.DEBUG_MODE) System.out.println("Try acquire beforeId: " + beforeId);
 
         doAction();
-        synchronized (controlVariables[beforeId]) {
+        
+        Object firstLock = new Object(), secondLock = new Object();
+        if(beforeId == id){
+            try {
+                throw new Exception("Cannot lock the same thing twice");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else if(beforeId < id){
+            firstLock = controlVariables[beforeId];
+            secondLock = controlVariables[id];
+        } else {
+            secondLock = controlVariables[beforeId];
+            firstLock = controlVariables[id];
+        }
+        
+        
+        synchronized (firstLock) {
             if (Main.DEBUG_MODE) {
                 System.out.println("Did acquire beforeId: " + beforeId);
                 System.out.println("Try acquire id: " + beforeId);
             }
 
             doAction();
-            synchronized (controlVariables[id]) {
+            synchronized (secondLock) {
                 if (Main.DEBUG_MODE) System.out.println("Did acquire beforeId: " + beforeId);
 
                 // Both locks are acquired, calculate terms in the designated range.

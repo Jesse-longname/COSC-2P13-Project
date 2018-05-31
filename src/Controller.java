@@ -1,3 +1,5 @@
+package main;
+
 /**
  * Sets up multiple PiCalculators and has any control variables used by the PiCalculators.
  * Has a method to calculate the value of Pi.
