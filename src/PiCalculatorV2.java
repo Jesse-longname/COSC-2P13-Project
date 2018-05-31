@@ -1,15 +1,7 @@
 /**
- * Calculates a portion of Pi along with other instances of this class.
- * Uses the equation given in the assignment, to calculate the _first_ to _last_ terms
- *  given in the constructor (inclusive, exclusive).
+ * Reserves locks in an Asymmetric fashion.
  */
-public class PiCalculatorSolution2 implements Runnable {
-    double calculated = 0;
-    long current;
-    long max; // Calculate to this term
-    final int id;
-    final int beforeId; // Used to lock the control variable before id.
-    Object[] controlVariables;
+public class PiCalculatorV2 extends PiCalculator {
 
     /**
      * Creates a PiCalculator to calculate the terms of the formula within the given range
@@ -18,14 +10,14 @@ public class PiCalculatorSolution2 implements Runnable {
      * @param from Term of formula to calculate from (Inclusive).
      * @param to Term of formula to calculate to (Exclusive).
      */
-    public PiCalculatorSolution2(Object[] controlVariables, int id, long from, long to) {
+    public PiCalculatorV2(Object[] controlVariables, int id, long from, long to) {
         this.controlVariables = controlVariables;
         this.id = id;
         beforeId = id == 0 ? controlVariables.length - 1 : id - 1;
         current = from;
         max = to;
+        if (Main.DEBUG_MODE) System.out.println("Using PiCalculatorV2");
     }
-
     /**
      * Does the Pi calculations. This method is called by Thread.start();
      * The final result will be available in calculated after execution.
@@ -49,14 +41,7 @@ public class PiCalculatorSolution2 implements Runnable {
                 if (Main.DEBUG_MODE) System.out.println("Did acquire beforeId: " + secondSynchronize);
 
                 // Both locks are acquired, calculate terms in the designated range.
-                int numerator = current % 2 == 0 ? 1 : -1;
-                double denominator;
-                while (current < max) {
-                    denominator = 2 * current + 1;
-                    calculated += numerator / denominator;
-                    numerator *= -1; // Save computation by just multiplying by -1 each iteration?
-                    current += 1;
-                }
+                calcPi();
 
                 if (Main.DEBUG_MODE) System.out.println("Try release id: " + secondSynchronize);
             }
@@ -72,22 +57,5 @@ public class PiCalculatorSolution2 implements Runnable {
 
         // After second release, so doAction
         doAction();
-    }
-
-    /**
-     * The doAction method from the assignment description.
-     */
-    private void doAction() {
-        calculate((int)(Math.random() * 4 + 36));
-    }
-
-    /**
-     * Calculates nth fibonacci term.
-     * @param n
-     * @return
-     */
-    private static long calculate(int n) {
-        if (n <= 1) return n;
-        else return calculate(n-1) + calculate(n-2);
     }
 }

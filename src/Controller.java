@@ -1,12 +1,13 @@
 /**
- * Sets up multiple PiCalculatorSolution2s and has any control variables used by the PiCalculatorSolution2s.
+ * Sets up multiple PiCalculators and has any control variables used by the PiCalculators.
  * Has a method to calculate the value of Pi.
  */
 public class Controller {
     long numElements;
     int numThreads;
+    int solution; // Used to pick what version of solution we wanna run
 
-    PiCalculatorSolution2[] calculators;
+    PiCalculator[] calculators;
     Thread[] threads;
     Object[] controlVariables; // Using general Object, because it is only there to be locked.
 
@@ -15,12 +16,13 @@ public class Controller {
      * @param numThreads The number of threads to use.
      * @param numElements How many elements of the Pi equation to calculate in total.
      */
-    public Controller(int numThreads, long numElements, int choice) {
+    public Controller(int numThreads, long numElements, int solution) {
         this.numElements = numElements;
         this.numThreads = numThreads;
+        this.solution = solution;
 
         // Set up threads
-        calculators = new PiCalculatorSolution2[numThreads];
+        calculators = new PiCalculator[numThreads];
         threads = new Thread[numThreads];
         // Set up the control variables
         controlVariables = new Object[numThreads];
@@ -30,19 +32,21 @@ public class Controller {
     }
 
     /**
-     * Starts of the PiCalculatorSolution2s, waits for them to finish, and returns to cumulative value that they calculated.
+     * Starts of the PiCalculators, waits for them to finish, and returns to cumulative value that they calculated.
      * @return The value of Pi
      */
     public double doCalculation() {
         // Set up all but the last thread, since it will have the remaining elements.
         long elementsPerThread = numElements / numThreads;
         for (int i = 0; i < numThreads-1; i++) {
-            calculators[i] = new PiCalculatorSolution2(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread));
+            calculators[i] = (solution % 2 == 1) ? new PiCalculatorV1(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread)) :
+                new PiCalculatorV2(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread));
             threads[i] = new Thread(calculators[i]);
         }
 
         // Set up final thread with the remaining elements
-        calculators[numThreads - 1] = new PiCalculatorSolution2(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements);
+        calculators[numThreads - 1] = (solution % 2 == 1) ? new PiCalculatorV1(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements) :
+                new PiCalculatorV2(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements);
         threads[numThreads - 1] = new Thread(calculators[numThreads - 1]);
 
         // Start all of the Threads
