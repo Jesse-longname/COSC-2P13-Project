@@ -10,11 +10,13 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
-        System.out.println("How many elements to calculate?");
+        System.out.println("How many elements to calculate?:");
         long numElements = s.nextLong();
-        System.out.println("How many threads to use?");
+        System.out.println("How many threads to use?:");
         int numThreads = s.nextInt();
-        Controller controller = new Controller(numThreads, numElements);
+        System.out.println("Pick Solution (1/2):");
+        int numSolution = s.nextInt();
+        Controller controller = new Controller(numThreads, numElements, numSolution);
         double result = controller.doCalculation();
         System.out.println("The calculated value for Pi is: " + result);
     }

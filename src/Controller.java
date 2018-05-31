@@ -7,6 +7,7 @@ package main;
 public class Controller {
     long numElements;
     int numThreads;
+    int solution; // Used to pick what version of solution we wanna run
 
     PiCalculator[] calculators;
     Thread[] threads;
@@ -17,9 +18,10 @@ public class Controller {
      * @param numThreads The number of threads to use.
      * @param numElements How many elements of the Pi equation to calculate in total.
      */
-    public Controller(int numThreads, long numElements) {
+    public Controller(int numThreads, long numElements, int solution) {
         this.numElements = numElements;
         this.numThreads = numThreads;
+        this.solution = solution;
 
         // Set up threads
         calculators = new PiCalculator[numThreads];
@@ -39,12 +41,14 @@ public class Controller {
         // Set up all but the last thread, since it will have the remaining elements.
         long elementsPerThread = numElements / numThreads;
         for (int i = 0; i < numThreads-1; i++) {
-            calculators[i] = new PiCalculator(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread));
+            //calculators[i] = (solution % 2 == 1) ? new PiCalculator(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread)) : 
+//            new PiCalculatorV2(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread));
             threads[i] = new Thread(calculators[i]);
         }
 
         // Set up final thread with the remaining elements
-        calculators[numThreads - 1] = new PiCalculator(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements);
+//        calculators[numThreads - 1] = (solution % 2 == 1) ? new PiCalculator(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements) : 
+//                new PiCalculatorV2(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements);
         threads[numThreads - 1] = new Thread(calculators[numThreads - 1]);
 
         // Start all of the Threads
