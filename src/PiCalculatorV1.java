@@ -9,7 +9,8 @@ public class PiCalculatorV1 extends PiCalculator {
      * @param from Term of formula to calculate from (Inclusive).
      * @param to Term of formula to calculate to (Exclusive).
      */
-    public PiCalculatorV1(Object[] controlVariables, int id, long from, long to) {
+    public PiCalculatorV1(Object[] controlVariables, int id, long from, long to, String filename) {
+        this.filename = filename;
         this.controlVariables = controlVariables;
         this.id = id;
         beforeId = id == 0 ? controlVariables.length - 1 : id - 1;

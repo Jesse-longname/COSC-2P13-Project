@@ -6,6 +6,7 @@ public class Controller {
     long numElements;
     int numThreads;
     int solution; // Used to pick what version of solution we wanna run
+    String filename;
 
     PiCalculator[] calculators;
     Thread[] threads;
@@ -16,10 +17,11 @@ public class Controller {
      * @param numThreads The number of threads to use.
      * @param numElements How many elements of the Pi equation to calculate in total.
      */
-    public Controller(int numThreads, long numElements, int solution) {
+    public Controller(int numThreads, long numElements, int solution, String filename) {
         this.numElements = numElements;
         this.numThreads = numThreads;
         this.solution = solution;
+        this.filename = filename;
 
         // Set up threads
         calculators = new PiCalculator[numThreads];
@@ -39,14 +41,14 @@ public class Controller {
         // Set up all but the last thread, since it will have the remaining elements.
         long elementsPerThread = numElements / numThreads;
         for (int i = 0; i < numThreads-1; i++) {
-            calculators[i] = (solution % 2 == 1) ? new PiCalculatorV1(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread)) :
-                new PiCalculatorV2(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread));
+            calculators[i] = (solution % 2 == 1) ? new PiCalculatorV1(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread), filename) :
+                new PiCalculatorV2(controlVariables, i, i*elementsPerThread, ((i+1)*elementsPerThread), filename);
             threads[i] = new Thread(calculators[i]);
         }
 
         // Set up final thread with the remaining elements
-        calculators[numThreads - 1] = (solution % 2 == 1) ? new PiCalculatorV1(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements) :
-                new PiCalculatorV2(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements);
+        calculators[numThreads - 1] = (solution % 2 == 1) ? new PiCalculatorV1(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements, filename) :
+                new PiCalculatorV2(controlVariables,numThreads-1, (numThreads-1)*elementsPerThread, numElements, filename);
         threads[numThreads - 1] = new Thread(calculators[numThreads - 1]);
 
         // Start all of the Threads

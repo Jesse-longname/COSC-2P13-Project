@@ -4,6 +4,7 @@ public abstract class PiCalculator implements Runnable {
     long max;
     int id;
     int beforeId;
+    String filename;
     Object[] controlVariables;
 
     public PiCalculator() {
@@ -18,7 +19,8 @@ public abstract class PiCalculator implements Runnable {
      * @param from Term of formula to calculate from (Inclusive).
      * @param to Term of formula to calculate to (Exclusive).
      */
-    public PiCalculator(Object[] controlVariables, int id, long from, long to) {
+    public PiCalculator(Object[] controlVariables, int id, long from, long to, String filename) {
+        this.filename = filename;
         this.controlVariables = controlVariables;
         this.id = id;
         beforeId = id == 0 ? controlVariables.length - 1 : id - 1;
@@ -29,11 +31,14 @@ public abstract class PiCalculator implements Runnable {
     protected void calcPi() {
         int numerator = current % 2 == 0 ? 1 : -1;
         double denominator;
+        int i = 0;
         while (current < max) {
             denominator = 2 * current + 1;
             calculated += numerator / denominator;
             numerator *= -1;
             current += 1;
+            Main.writeResult(filename, this.id + " " + i + " " + calculated);
+            i++;
         }
     }
 

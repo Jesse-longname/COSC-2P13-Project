@@ -1,0 +1,2 @@
+E:\\JesseDev\\school\\COSC-2P13\\COSC-2P13-Project\\output.txt
+1 10 1000
