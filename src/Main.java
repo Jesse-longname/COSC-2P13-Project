@@ -12,7 +12,7 @@ public class Main {
         long numElements = s.nextLong();
         System.out.println("How many threads to use?:");
         int numThreads = s.nextInt();
-        System.out.println("Pick Solution (V1/V2):");
+        System.out.println("Pick Solution (1/2):");
         int numSolution = s.nextInt();
         Controller controller = new Controller(numThreads, numElements, numSolution);
         double result = controller.doCalculation();
