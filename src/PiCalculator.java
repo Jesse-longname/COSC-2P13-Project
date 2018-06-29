@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.nio.Buffer;
+
 public abstract class PiCalculator implements Runnable {
     double calculated = 0;
     long current;
@@ -6,6 +9,7 @@ public abstract class PiCalculator implements Runnable {
     int beforeId;
     String filename;
     Object[] controlVariables;
+    BufferedWriter writer;
 
     public PiCalculator() {
         this.id = -1;
@@ -19,10 +23,11 @@ public abstract class PiCalculator implements Runnable {
      * @param from Term of formula to calculate from (Inclusive).
      * @param to Term of formula to calculate to (Exclusive).
      */
-    public PiCalculator(Object[] controlVariables, int id, long from, long to, String filename) {
+    public PiCalculator(Object[] controlVariables, int id, long from, long to, String filename, BufferedWriter writer) {
         this.filename = filename;
         this.controlVariables = controlVariables;
         this.id = id;
+        this.writer = writer;
         beforeId = id == 0 ? controlVariables.length - 1 : id - 1;
         current = from;
         max = to;
@@ -37,7 +42,7 @@ public abstract class PiCalculator implements Runnable {
             calculated += numerator / denominator;
             numerator *= -1;
             current += 1;
-            Main.writeResult(filename, this.id + " " + i + " " + calculated);
+            Main.writeResult(writer, filename, this.id + " " + i + " " + calculated);
             i++;
         }
     }

@@ -1,3 +1,5 @@
+import java.io.BufferedWriter;
+
 /**
  * Reserves locks in an Asymmetric fashion.
  */
@@ -10,10 +12,11 @@ public class PiCalculatorV2 extends PiCalculator {
      * @param from Term of formula to calculate from (Inclusive).
      * @param to Term of formula to calculate to (Exclusive).
      */
-    public PiCalculatorV2(Object[] controlVariables, int id, long from, long to, String filename) {
+    public PiCalculatorV2(Object[] controlVariables, int id, long from, long to, String filename, BufferedWriter writer) {
         this.filename = filename;
         this.controlVariables = controlVariables;
         this.id = id;
+        this.writer = writer;
         beforeId = id == 0 ? controlVariables.length - 1 : id - 1;
         current = from;
         max = to;

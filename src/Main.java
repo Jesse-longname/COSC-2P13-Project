@@ -11,6 +11,7 @@ public class Main {
     public static boolean DEBUG_MODE = false;
     public static int FILE_MODE = 1; // 0 = no file output, 1 = Output using Buffered, 2 = Output using Files.
     public static long total_time;
+    public static BufferedWriter writer;
 
     public static void main(String[] args) {
         String file = args[1];
@@ -70,14 +71,15 @@ public class Main {
         String[] vals;
         Controller controller;
         double result;
+        writer = createFile(outputLocation);
         for (int i = 1; i < args.size(); i++) {
             vals = args.get(i).split(" ");
             type = Integer.parseInt(vals[0]);
             numThreads = Integer.parseInt(vals[1]);
             numElements = Integer.parseInt(vals[2]);
-            controller = new Controller(numThreads, numElements, type, outputLocation);
+            controller = new Controller(numThreads, numElements, type, outputLocation, writer);
             result = controller.doCalculation();
-            writeResult(outputLocation, "Result from pass " + i + ": " + result);
+            writeResult(writer, outputLocation, "Result from pass " + i + ": " + result);
             if (DEBUG_MODE) {
                 System.out.println("CALCULATION " + i);
                 System.out.println("The calculated value for Pi is: " + result);
@@ -85,22 +87,30 @@ public class Main {
         }
         total_time = System.nanoTime() - total_time;
         if (DEBUG_MODE) {
-            writeResult(outputLocation, "Total Time: " + total_time);
+            writeResult(writer, outputLocation, "Total Time: " + total_time);
             System.out.println("Total Time: " + total_time);
+        }
+        try {
+            writer.close();
+        } catch(IOException e) {
+            System.err.println(e);
         }
     }
 
     /**
      * Creates a new file at the given location, erasing any previous file.
      * @param filePath
+     * @return BufferedWriter which is for the file created
      */
-    public static void createFile(String filePath) {
+    public static BufferedWriter createFile(String filePath) {
         try {
             Files.deleteIfExists(FileSystems.getDefault().getPath(filePath));
             Files.createFile(FileSystems.getDefault().getPath(filePath));
+            return new BufferedWriter(new FileWriter(filePath, true));
         } catch (IOException e) {
             System.err.println(e);
         }
+        return null;
     }
 
     /**
@@ -108,14 +118,12 @@ public class Main {
      * @param filename
      * @param value
      */
-    public static void writeResult(String filename, String value) {
+    public static void writeResult(BufferedWriter writer, String filename, String value) {
         if (FILE_MODE == 0) return;
         try {
             if (FILE_MODE == 1) {
-                BufferedWriter out = new BufferedWriter(new FileWriter(filename, true));
-                out.write(value);
-                out.write(System.lineSeparator());
-                out.close();
+                writer.write(value);
+                writer.write(System.lineSeparator());
             } else if (FILE_MODE == 2) {
                 List<String> toWrite = new LinkedList<>();
                 toWrite.add(value);
