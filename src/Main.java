@@ -9,7 +9,7 @@ import java.util.Scanner;
  */
 public class Main {
     public static boolean DEBUG_MODE = false;
-    public static int FILE_MODE = 0; // 0 = no file output, 1 = Output using Buffered, 2 = Output using Files.
+    public static int FILE_MODE = 1; // 0 = no file output, 1 = Output using Buffered, 2 = Output using Files.
     public static long total_time;
 
     public static void main(String[] args) {
@@ -94,7 +94,7 @@ public class Main {
      * Creates a new file at the given location, erasing any previous file.
      * @param filePath
      */
-    private static void createFile(String filePath) {
+    public static void createFile(String filePath) {
         try {
             Files.deleteIfExists(FileSystems.getDefault().getPath(filePath));
             Files.createFile(FileSystems.getDefault().getPath(filePath));
